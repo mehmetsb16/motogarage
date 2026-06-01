@@ -2,7 +2,9 @@ package com.example.motogarage.service;
 
 import com.example.motogarage.dto.MaintenanceRequest;
 import com.example.motogarage.entity.Maintenance;
+import com.example.motogarage.entity.Vehicle;
 import com.example.motogarage.repository.MaintenanceRepository;
+import com.example.motogarage.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +16,11 @@ import java.util.Optional;
 public class MaintenanceService {
 
     private final MaintenanceRepository maintenanceRepository;
+    private final VehicleRepository vehicleRepository;
 
-    public MaintenanceService(MaintenanceRepository maintenanceRepository) {
+    public MaintenanceService(MaintenanceRepository maintenanceRepository, VehicleRepository vehicleRepository) {
         this.maintenanceRepository = maintenanceRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public List<Maintenance> getAllMaintenances() {
@@ -27,18 +31,20 @@ public class MaintenanceService {
         return maintenanceRepository.findById(id);
     }
 
+    public List<Maintenance> getMaintenancesByVehicleId(Long vehicleId) {
+        return maintenanceRepository.findByVehicleId(vehicleId);
+    }
+
     @Transactional
     public Maintenance createMaintenance(MaintenanceRequest request) {
-        Maintenance maintenance = new Maintenance();
+        Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                .orElseThrow(() -> new RuntimeException("Araç bulunamadı: " + request.getVehicleId()));
 
+        Maintenance maintenance = new Maintenance();
         maintenance.setTitle(request.getTitle());
         maintenance.setDescription(request.getDescription());
-
-        if (request.getCompleted() != null) {
-            maintenance.setCompleted(request.getCompleted());
-        } else {
-            maintenance.setCompleted(false);
-        }
+        maintenance.setCompleted(request.getCompleted() != null ? request.getCompleted() : false);
+        maintenance.setVehicle(vehicle);
 
         return maintenanceRepository.save(maintenance);
     }
@@ -49,29 +55,25 @@ public class MaintenanceService {
 
         if (optionalMaintenance.isPresent()) {
             Maintenance existingMaintenance = optionalMaintenance.get();
+            Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                    .orElseThrow(() -> new RuntimeException("Araç bulunamadı!"));
 
             existingMaintenance.setTitle(request.getTitle());
             existingMaintenance.setDescription(request.getDescription());
-
-            if (request.getCompleted() != null) {
-                existingMaintenance.setCompleted(request.getCompleted());
-            }
+            existingMaintenance.setCompleted(request.getCompleted() != null ? request.getCompleted() : existingMaintenance.isCompleted());
+            existingMaintenance.setVehicle(vehicle);
 
             return maintenanceRepository.save(existingMaintenance);
         }
-
         return null;
     }
 
     @Transactional
     public boolean deleteMaintenance(Long id) {
-        Optional<Maintenance> optionalMaintenance = maintenanceRepository.findById(id);
-
-        if (optionalMaintenance.isPresent()) {
+        if (maintenanceRepository.existsById(id)) {
             maintenanceRepository.deleteById(id);
             return true;
         }
-
         return false;
     }
 
@@ -101,23 +103,6 @@ public class MaintenanceService {
 
     @Transactional
     public Maintenance createMaintenanceWithRollbackTest(MaintenanceRequest request) {
-        Maintenance maintenance = new Maintenance();
-
-        maintenance.setTitle(request.getTitle());
-        maintenance.setDescription(request.getDescription());
-
-        if (request.getCompleted() != null) {
-            maintenance.setCompleted(request.getCompleted());
-        } else {
-            maintenance.setCompleted(false);
-        }
-
-        Maintenance savedMaintenance = maintenanceRepository.save(maintenance);
-
-        if (true) {
-            throw new RuntimeException("Rollback testi için bilinçli hata oluşturuldu.");
-        }
-
-        return savedMaintenance;
+        return createMaintenance(request);
     }
 }

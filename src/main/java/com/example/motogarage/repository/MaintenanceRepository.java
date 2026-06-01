@@ -13,6 +13,8 @@ public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> 
 
     List<Maintenance> findByTitleContainingIgnoreCaseAndCompleted(String title, boolean completed);
 
+    List<Maintenance> findByVehicleId(Long vehicleId);
+
     long countByCompleted(boolean completed);
 
     boolean existsByTitleIgnoreCase(String title);

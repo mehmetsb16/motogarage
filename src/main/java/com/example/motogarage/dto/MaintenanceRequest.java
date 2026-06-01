@@ -1,6 +1,7 @@
 package com.example.motogarage.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class MaintenanceRequest {
@@ -14,15 +15,20 @@ public class MaintenanceRequest {
 
     private Boolean completed;
 
+    @NotNull(message = "Araç ID'si boş bırakılamaz.")
+    private Long vehicleId;
+
     public MaintenanceRequest() {
     }
 
-    public MaintenanceRequest(String title, String description, Boolean completed) {
+    public MaintenanceRequest(String title, String description, Boolean completed, Long vehicleId) {
         this.title = title;
         this.description = description;
         this.completed = completed;
+        this.vehicleId = vehicleId;
     }
 
+    // Getter ve Setter metotları
     public String getTitle() {
         return title;
     }
@@ -45,5 +51,13 @@ public class MaintenanceRequest {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
     }
 }

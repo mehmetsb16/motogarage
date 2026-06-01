@@ -28,8 +28,13 @@ public class MaintenanceController {
     @GetMapping("/{id}")
     public ResponseEntity<Maintenance> getMaintenanceById(@PathVariable Long id) {
         return maintenanceService.getMaintenanceById(id)
-                .map(maintenance -> ResponseEntity.ok(maintenance))
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/vehicle/{vehicleId}")
+    public List<Maintenance> getMaintenancesByVehicleId(@PathVariable Long vehicleId) {
+        return maintenanceService.getMaintenancesByVehicleId(vehicleId);
     }
 
     @PostMapping
@@ -44,22 +49,18 @@ public class MaintenanceController {
             @Valid @RequestBody MaintenanceRequest request
     ) {
         Maintenance updatedMaintenance = maintenanceService.updateMaintenance(id, request);
-
         if (updatedMaintenance != null) {
             return ResponseEntity.ok(updatedMaintenance);
         }
-
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMaintenance(@PathVariable Long id) {
         boolean deleted = maintenanceService.deleteMaintenance(id);
-
         if (deleted) {
             return ResponseEntity.ok("Bakım kaydı silindi.");
         }
-
         return ResponseEntity.notFound().build();
     }
 
