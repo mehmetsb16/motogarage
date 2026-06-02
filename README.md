@@ -33,8 +33,8 @@ Sistemde araçlar ve bakımlar arasında `Many-to-One` ilişki kullanılarak, he
 
 
 ## 🔐 Erişim Bilgileri
-* **Admin:** `admin` / `admin123`
-* **Kullanıcı:** `user` / `1234`
+* **Admin:** `admin` / `seyit123`
+* **Kullanıcı:** `user` / `birdal123`
 
 ## 📝 Kurulum
 1. Projeyi klonlayın: `git clone <repo-url>`
