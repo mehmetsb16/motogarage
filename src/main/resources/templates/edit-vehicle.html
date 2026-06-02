@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Araç Düzenle</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; background: #f4f7f6; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { padding: 10px 20px; background: #3498db; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Aracı Düzenle</h2>
+    <form th:action="@{/update-vehicle}" th:object="${vehicle}" method="post">
+        <input type="hidden" th:field="*{id}" /> <label>Marka:</label>
+        <input type="text" th:field="*{brand}" />
+        <label>Model:</label>
+        <input type="text" th:field="*{model}" />
+        <label>Plaka:</label>
+        <input type="text" th:field="*{plate}" />
+        <button type="submit">Güncelle</button>
+    </form>
+</div>
+</body>
+</html>

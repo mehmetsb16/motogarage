@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/api/vehicles") // Tüm isteklerin yolu buradan başlar
 public class VehicleController {
 
     private final VehicleRepository vehicleRepository;
@@ -17,16 +17,19 @@ public class VehicleController {
         this.vehicleRepository = vehicleRepository;
     }
 
+    // POSTMAN ile JSON eklemek için
     @PostMapping
     public Vehicle createVehicle(@RequestBody Vehicle vehicle) {
         return vehicleRepository.save(vehicle);
     }
 
+    // POSTMAN ile listelemek için
     @GetMapping
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
+    // POSTMAN ile güncellemek için
     @PutMapping("/{id}")
     public ResponseEntity<Vehicle> updateVehicle(@PathVariable Long id, @RequestBody Vehicle vehicle) {
         return vehicleRepository.findById(id)
@@ -39,6 +42,7 @@ public class VehicleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // POSTMAN ile silmek için
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteVehicle(@PathVariable Long id) {
         if (vehicleRepository.existsById(id)) {
