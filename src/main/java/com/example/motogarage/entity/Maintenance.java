@@ -18,7 +18,7 @@ public class Maintenance {
     private String description;
     private boolean completed;
 
-    // Araca bağladığımız kısım:
+
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
