@@ -24,32 +24,38 @@ public class SecurityConfig {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
-
-                // Login/Logout için oturum yönetimini aktif bırakıyoruz (Stateless'ı kaldırdık)
                 .authorizeHttpRequests(auth -> auth
+                        // Public yollar
                         .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**").permitAll()
+
+                        // API yolları
+                        .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+
+                        // Maintenances yolları
                         .requestMatchers(HttpMethod.GET, "/maintenances/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/maintenances/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/maintenances/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/maintenances/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
-
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("/", false) // Sonsuz döngüyü engellemek için false yapıldı
                         .permitAll()
                 )
-
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
-
+                // Postman ve API istekleri için gerekli
+                .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
