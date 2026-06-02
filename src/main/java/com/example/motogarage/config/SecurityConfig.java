@@ -7,7 +7,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,42 +29,41 @@ public class SecurityConfig {
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
 
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
+                // Login/Logout için oturum yönetimini aktif bırakıyoruz (Stateless'ı kaldırdık)
                 .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers("/h2-console/**").permitAll()
-
-                        // Sadece listeleme işlemlerini (GET) USER ve ADMIN yapabilir
+                        .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/maintenances/**").hasAnyRole("USER", "ADMIN")
-
-                        // Ekleme, Güncelleme ve Silme işlemlerini SADECE ADMIN yapabilir
                         .requestMatchers(HttpMethod.POST, "/maintenances/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/maintenances/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/maintenances/**").hasRole("ADMIN")
-
                         .anyRequest().authenticated()
                 )
 
-                .httpBasic(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll()
+                )
+
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
 
                 .build();
     }
 
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-
         UserDetails user = User.builder()
                 .username("user")
-                .password(passwordEncoder.encode("1234"))
+                .password(passwordEncoder.encode("birdal123"))
                 .roles("USER")
                 .build();
 
         UserDetails admin = User.builder()
                 .username("admin")
-                .password(passwordEncoder.encode("admin123"))
+                .password(passwordEncoder.encode("seyit123"))
                 .roles("ADMIN")
                 .build();
 

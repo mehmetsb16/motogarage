@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MotoGarage - Garaj Yönetimi</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 30px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .user-info { text-align: right; margin-bottom: 20px; color: #555; font-size: 0.9em; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+        .logout-btn { background-color: #e74c3c; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85em; }
+        .logout-btn:hover { background-color: #c0392b; }
+        h1, h2 { color: #333; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .status-true { color: green; font-weight: bold; }
+        .status-false { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="user-info">
+        <span>Oturum: </span>
+        <strong th:text="${username}">Kullanıcı</strong> 👤
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Çıkış Yap</button>
+        </form>
+    </div>
+
+    <h1>🏍️ MotoGarage Yönetim Paneli</h1>
+
+    <h2>Araç Envanteri</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Marka</th>
+            <th>Model</th>
+            <th>Plaka</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="vehicle : ${vehicles}">
+            <td th:text="${vehicle.id}"></td>
+            <td th:text="${vehicle.brand}"></td>
+            <td th:text="${vehicle.model}"></td>
+            <td th:text="${vehicle.plate}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Bakım Geçmişi</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Başlık</th>
+            <th>Açıklama</th>
+            <th>Durum</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="m : ${maintenances}">
+            <td th:text="${m.id}"></td>
+            <td th:text="${m.title}"></td>
+            <td th:text="${m.description}"></td>
+            <td th:text="${m.completed} ? 'Tamamlandı' : 'Bekliyor'"
+                th:classappend="${m.completed} ? 'status-true' : 'status-false'">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
