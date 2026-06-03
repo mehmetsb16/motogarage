@@ -28,9 +28,6 @@ Bu proje, araçların veritabanı düzeyinde yönetilmesini ve her araca özel b
 - `PUT /maintenances/{id}` - Bakım kaydını günceller.
 - `DELETE /maintenances/{id}` - Bakım kaydını siler.
 
-## 📊 Veritabanı İlişkisi
-Sistemde araçlar ve bakımlar arasında `Many-to-One` ilişki kullanılarak, her bakım kaydı mutlaka bir araca atanır.
-
 
 ## 🔐 Erişim Bilgileri
 * **Admin:** `admin` / `seyit123`
