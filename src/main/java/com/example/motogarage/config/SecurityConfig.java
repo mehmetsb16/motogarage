@@ -28,16 +28,16 @@ public class SecurityConfig {
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // Public yollar
+
                         .requestMatchers("/h2-console/**", "/login", "/css/**", "/js/**").permitAll()
 
-                        // API yolları
+
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
 
-                        // Maintenances yolları
+
                         .requestMatchers(HttpMethod.GET, "/maintenances/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/maintenances/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/maintenances/**").hasRole("ADMIN")
@@ -47,14 +47,14 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", false) // Sonsuz döngüyü engellemek için false yapıldı
+                        .defaultSuccessUrl("/", false)
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
-                // Postman ve API istekleri için gerekli
+
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }

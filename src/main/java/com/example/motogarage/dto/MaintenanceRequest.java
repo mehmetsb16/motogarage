@@ -28,7 +28,7 @@ public class MaintenanceRequest {
         this.vehicleId = vehicleId;
     }
 
-    // Getter ve Setter metotları
+
     public String getTitle() {
         return title;
     }

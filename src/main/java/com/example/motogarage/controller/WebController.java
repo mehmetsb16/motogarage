@@ -42,7 +42,7 @@ public class WebController {
         return "index";
     }
 
-    // --- ARAÇ İŞLEMLERİ ---
+
     @PostMapping("/save-vehicle")
     public String saveVehicle(@ModelAttribute Vehicle vehicle) {
         vehicleRepository.save(vehicle);
@@ -67,7 +67,7 @@ public class WebController {
         return "redirect:/";
     }
 
-    // --- BAKIM İŞLEMLERİ ---
+
     @PostMapping("/save-maintenance")
     public String saveMaintenance(@ModelAttribute Maintenance maintenance) {
         maintenanceRepository.save(maintenance);
